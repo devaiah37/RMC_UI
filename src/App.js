@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap";
+import Cards from "./components/Cards/Cards";
+//import Filters from "./components/Filters/Filters";
+import Search from "./components/Search/Search";
+import "./App.css";
+import React, { useEffect, useState } from 'react';
 
-function App() {
+
+const App = () => {
+  const [characterCards, setCharacterCards] = useState([]);
+  const [searchs, SetSearch]= useState(" ")
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/v1/characters/?name=${searchs}`);
+        const data = await response.json();
+        setCharacterCards(data.characters);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, [searchs]);
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+      <h1 className="text-center"> RICK AND <span className="text-primary"> MORTY</span>
+</h1>
+<Search SetSearch={SetSearch}/>
 
+
+  {/* <div className="col-3"> */}
+    {/* <Filters /> */}
+    {/* </div> */}
+    
+  
+    
+        <Cards characterCards={characterCards}/>
+      
+  </div>
+
+    );
+}
 export default App;
